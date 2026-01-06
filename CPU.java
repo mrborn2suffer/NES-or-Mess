@@ -21,5 +21,25 @@ public class CPU {
     private int cycles;
     private boolean nmiPending;
     private boolean irqPending;
+
+    public CPU(Memory memory) 
+    {
+        this.memory = memory;
+        reset();
+    }
+    
+    public void reset() 
+    {
+        A = 0;
+        X = 0;
+        Y = 0;
+        SP = 0xFD;
+        P = 0x24; 
+        cycles = 0;
+        nmiPending = false;
+        irqPending = false;
+        
+        PC = memory.readWord(0xFFFC) & 0xFFFF;
+    }
     
 }
