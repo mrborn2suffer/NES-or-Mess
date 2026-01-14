@@ -170,5 +170,132 @@ public class CPU {
             case 0xB8: CLV(); 
             break;
 
+            // CMP operation
+            case 0xC9: CMP_IMM(); 
+            break;
+            case 0xC5: CMP_ZP(); 
+            break;
+            case 0xD5: CMP_ZPX(); 
+            break;
+            case 0xCD: CMP_ABS(); 
+            break;
+            case 0xDD: CMP_ABSX(); 
+            break;
+            case 0xD9: CMP_ABSY(); 
+            break;
+            case 0xC1: CMP_INDX(); 
+            break;
+            case 0xD1: CMP_INDY(); 
+            break;
+            
+            // CPX operation
+            case 0xE0: CPX_IMM(); 
+            break;
+            case 0xE4: CPX_ZP(); 
+            break;
+            case 0xEC: CPX_ABS(); 
+            break;
+            
+            // CPY operation
+            case 0xC0: CPY_IMM(); 
+            break;
+            case 0xC4: CPY_ZP(); 
+            break;
+            case 0xCC: CPY_ABS(); 
+            break;
+            
+            // DEC operation
+            case 0xC6: DEC_ZP(); 
+            break;
+            case 0xD6: DEC_ZPX(); 
+            break;
+            case 0xCE: DEC_ABS(); 
+            break;
+            case 0xDE: DEC_ABSX(); 
+            break;
+            
+            // DEX operation
+            case 0xCA: DEX(); 
+            break;
+            
+            // DEY operation
+            case 0x88: DEY(); 
+            break;
+            
+            // EOR operation
+            case 0x49: EOR_IMM(); 
+            break;
+            case 0x45: EOR_ZP(); 
+            break;
+            case 0x55: EOR_ZPX(); 
+            break;
+            case 0x4D: EOR_ABS(); 
+            break;
+            case 0x5D: EOR_ABSX(); 
+            break;
+            case 0x59: EOR_ABSY(); 
+            break;
+            case 0x41: EOR_INDX(); 
+            break;
+            case 0x51: EOR_INDY(); 
+            break;
+            
+            // INC operation
+            case 0xE6: INC_ZP(); 
+            break;
+            case 0xF6: INC_ZPX(); 
+            break;
+            case 0xEE: INC_ABS(); 
+            break;
+            case 0xFE: INC_ABSX(); 
+            break;
+            
+            // INX operation
+            case 0xE8: INX(); 
+            break;
+            
+            // INY operation
+            case 0xC8: INY(); 
+            break;
+            
+            // JMP operation
+            case 0x4C: JMP_ABS(); 
+            break;
+            case 0x6C: JMP_IND(); 
+            break;
+            
+            // JSR operation
+            case 0x20: JSR(); 
+            break;
+            
+            // LDA operation
+            case 0xA9: LDA_IMM(); 
+            break;
+            case 0xA5: LDA_ZP(); 
+            break;
+            case 0xB5: LDA_ZPX(); 
+            break;
+            case 0xAD: LDA_ABS(); 
+            break;
+            case 0xBD: LDA_ABSX(); 
+            break;
+            case 0xB9: LDA_ABSY(); 
+            break;
+            case 0xA1: LDA_INDX(); 
+            break;
+            case 0xB1: LDA_INDY(); 
+            break;
+            
+            // LDX operation
+            case 0xA2: LDX_IMM(); 
+            break;
+            case 0xA6: LDX_ZP(); 
+            break;
+            case 0xB6: LDX_ZPY(); 
+            break;
+            case 0xAE: LDX_ABS(); 
+            break;
+            case 0xBE: LDX_ABSY(); 
+            break;
     
 }
