@@ -297,5 +297,51 @@ public class CPU {
             break;
             case 0xBE: LDX_ABSY(); 
             break;
-    
+            
+            // LDY operation
+            case 0xA0: LDY_IMM(); 
+            break;
+            case 0xA4: LDY_ZP(); 
+            break;
+            case 0xB4: LDY_ZPX(); 
+            break;
+            case 0xAC: LDY_ABS(); 
+            break;
+            case 0xBC: LDY_ABSX(); 
+            break;
+            
+            // LSR operation
+            case 0x4A: LSR_ACC(); 
+            break;
+            case 0x46: LSR_ZP(); 
+            break;
+            case 0x56: LSR_ZPX(); 
+            break;
+            case 0x4E: LSR_ABS(); 
+            break;
+            case 0x5E: LSR_ABSX(); 
+            break;
+            
+            // NOP operation
+            case 0xEA: NOP(); 
+            break;
+            
+            // ORA operation
+            case 0x09: ORA_IMM(); 
+            break;
+            case 0x05: ORA_ZP(); 
+            break;
+            case 0x15: ORA_ZPX(); 
+            break;
+            case 0x0D: ORA_ABS(); 
+            break;
+            case 0x1D: ORA_ABSX(); 
+            break;
+            case 0x19: ORA_ABSY(); 
+            break;
+            case 0x01: ORA_INDX(); 
+            break;
+            case 0x11: ORA_INDY(); 
+            break;
+
 }
