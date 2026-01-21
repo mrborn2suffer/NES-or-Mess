@@ -344,4 +344,138 @@ public class CPU {
             case 0x11: ORA_INDY(); 
             break;
 
+            // PHA operation
+            case 0x48: PHA(); 
+            break;
+            
+            // PHP operation
+            case 0x08: PHP(); 
+            break;
+            
+            // PLA operation
+            case 0x68: PLA(); 
+            break;
+            
+            // PLP operation
+            case 0x28: PLP(); 
+            break;
+            
+            // ROL operation
+            case 0x2A: ROL_ACC(); 
+            break;
+            case 0x26: ROL_ZP(); 
+            break;
+            case 0x36: ROL_ZPX(); 
+            break;
+            case 0x2E: ROL_ABS(); 
+            break;
+            case 0x3E: ROL_ABSX(); 
+            break;
+            
+            // ROR operation
+            case 0x6A: ROR_ACC(); 
+            break;
+            case 0x66: ROR_ZP(); 
+            break;
+            case 0x76: ROR_ZPX(); 
+            break;
+            case 0x6E: ROR_ABS(); 
+            break;
+            case 0x7E: ROR_ABSX(); 
+            break;
+            
+            // RTI operation
+            case 0x40: RTI(); 
+            break;
+            
+            // RTS operation
+            case 0x60: RTS(); 
+            break;
+            
+            // SBC operation
+            case 0xE9: SBC_IMM(); 
+            break;
+            case 0xE5: SBC_ZP(); 
+            break;
+            case 0xF5: SBC_ZPX(); 
+            break;
+            case 0xED: SBC_ABS(); 
+            break;
+            case 0xFD: SBC_ABSX(); 
+            break;
+            case 0xF9: SBC_ABSY(); 
+            break;
+            case 0xE1: SBC_INDX(); 
+            break;
+            case 0xF1: SBC_INDY(); 
+            break;
+            
+            // SEC operation
+            case 0x38: SEC(); 
+            break;
+            
+            // SED
+            case 0xF8: SED(); 
+            break;
+            
+            // SEI operation
+            case 0x78: SEI(); 
+            break;
+            
+            // STA operation
+            case 0x85: STA_ZP(); 
+            break;
+            case 0x95: STA_ZPX(); 
+            break;
+            case 0x8D: STA_ABS(); 
+            break;
+            case 0x9D: STA_ABSX(); 
+            break;
+            case 0x99: STA_ABSY(); 
+            break;
+            case 0x81: STA_INDX(); 
+            break;
+            case 0x91: STA_INDY(); 
+            break;
+            
+            // STX operation
+            case 0x86: STX_ZP(); 
+            break;
+            case 0x96: STX_ZPY(); 
+            break;
+            case 0x8E: STX_ABS(); 
+            break;
+            
+            // STY operation
+            case 0x84: STY_ZP(); 
+            break;
+            case 0x94: STY_ZPX(); 
+            break;
+            case 0x8C: STY_ABS(); 
+            break;
+            
+            // TAX operation
+            case 0xAA: TAX(); 
+            break;
+            
+            // TAY operation
+            case 0xA8: TAY(); 
+            break;
+            
+            // TSX operation
+            case 0xBA: TSX(); 
+            break;
+            
+            // TXA operation
+            case 0x8A: TXA(); 
+            break;
+            
+            // TXS operation
+            case 0x9A: TXS(); 
+            break;
+            
+            // TYA operation
+            case 0x98: TYA(); 
+            break;
+
 }
