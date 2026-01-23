@@ -478,4 +478,39 @@ public class CPU {
             case 0x98: TYA(); 
             break;
 
+            // Unofficial opcodes
+            case 0x04: NOP_ZP(); 
+            break;
+            case 0x0C: NOP_ABS(); 
+            break;
+            case 0x14: NOP_ZPX(); 
+            break;
+            case 0x1A: NOP_IMplied(); 
+            break;
+            case 0x1C: NOP_ABSX(); 
+            break;
+            case 0x34: NOP_ZPX(); 
+            break;
+            case 0x3A: NOP_IMplied(); 
+            break;
+            case 0x3C: NOP_ABSX(); 
+            break;
+            case 0x44: NOP_ZP(); 
+            break;
+            case 0x54: NOP_ZPX(); 
+            break;
+            case 0x5A: NOP_IMplied(); 
+            break;
+            case 0x5C: NOP_ABSX(); 
+            break;
+            case 0x64: NOP_ZP(); 
+            break;
+            case 0x74: NOP_ZPX(); 
+            break;
+            case 0x7A: NOP_IMplied(); 
+            break;
+            case 0x7C: NOP_ABSX(); 
+            break;
+            case 0x80: NOP_IMM(); 
+            break;
 }
