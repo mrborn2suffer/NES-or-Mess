@@ -513,4 +513,68 @@ public class CPU {
             break;
             case 0x80: NOP_IMM(); 
             break;
+            case 0x82: NOP_IMM(); 
+            break;
+            case 0x89: NOP_IMM(); 
+            break;
+            case 0xC2: NOP_IMM(); 
+            break;
+            case 0xD4: NOP_ZPX(); 
+            break;
+            case 0xDA: NOP_IMplied(); 
+            break;
+            case 0xDC: NOP_ABSX(); 
+            break;
+            case 0xE2: NOP_IMM(); 
+            break;
+            case 0xF4: NOP_ZPX(); 
+            break;
+            case 0xFA: NOP_IMplied(); 
+            break;
+            case 0xFC: NOP_ABSX(); 
+            break;
+            
+            default:
+                cycles += 1;
+                break;
+        }
+    }
+    
+    //Zero-page (first 256 bytes : $0000 to $00FF)
+    private int readZeroPageWord(int zpAddress) 
+    {
+        zpAddress &= 0xFF; 
+        int low = memory.read(zpAddress) & 0xFF;
+        int high = memory.read((zpAddress + 1) & 0xFF) & 0xFF; 
+        return (high << 8) | low;
+    }
+
+    private int immediate() 
+    {
+        int value = memory.read(PC) & 0xFF;
+        PC = (PC + 1) & 0xFFFF;
+        return value;
+    }
+    
+    private int zeroPage() 
+    {
+        int address = memory.read(PC) & 0xFF;
+        PC = (PC + 1) & 0xFFFF;
+        return address;
+    }
+    
+    private int zeroPageX() 
+    {
+        int address = (memory.read(PC) + X) & 0xFF;
+        PC = (PC + 1) & 0xFFFF;
+        return address;
+    }
+    
+    private int zeroPageY() 
+    {
+        int address = (memory.read(PC) + Y) & 0xFF;
+        PC = (PC + 1) & 0xFFFF;
+        return address;
+    }
+
 }
