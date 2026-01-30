@@ -577,4 +577,79 @@ public class CPU {
         return address;
     }
 
+    private int absolute() 
+    {
+        int address = memory.readWord(PC) & 0xFFFF;
+        PC = (PC + 2) & 0xFFFF;
+        return address;
+    }
+    
+    private int absoluteX() 
+    {
+        int address = (memory.readWord(PC) + X) & 0xFFFF;
+        PC = (PC + 2) & 0xFFFF;
+        return address;
+    }
+    
+    private int absoluteY() 
+    {
+        int address = (memory.readWord(PC) + Y) & 0xFFFF;
+        PC = (PC + 2) & 0xFFFF;
+        return address;
+    }
+    
+    private int indexedIndirect() 
+    {
+        int pointer = (memory.read(PC) + X) & 0xFF;
+        PC = (PC + 1) & 0xFFFF;
+        return readZeroPageWord(pointer);
+    }
+    
+    private int indirectIndexed() 
+    {
+        int pointer = memory.read(PC) & 0xFF;
+        PC = (PC + 1) & 0xFFFF;
+        return (readZeroPageWord(pointer) + Y) & 0xFFFF;
+    }
+    
+    private void setZeroFlag(int value) 
+    {
+        if ((value & 0xFF) == 0) 
+        P |= FLAG_ZERO;
+        else 
+        P &= ~FLAG_ZERO;
+    }
+    
+    private void setZeroFlag(boolean condition) 
+    {
+        if (condition) 
+        P |= FLAG_ZERO;
+        else 
+        P &= ~FLAG_ZERO;
+    }
+    
+    private void setNegativeFlag(int value) 
+    {
+        if ((value & 0x80) != 0) 
+        P |= FLAG_NEGATIVE;
+        else
+        P &= ~FLAG_NEGATIVE;
+    }
+    
+    private void setCarryFlag(boolean set)
+     {
+        if (set) 
+        P |= FLAG_CARRY;
+        else 
+        P &= ~FLAG_CARRY;
+    }
+    
+    private void setOverflowFlag(boolean set) 
+    {
+        if (set) 
+        P |= FLAG_OVERFLOW;
+        else 
+        P &= ~FLAG_OVERFLOW;
+    }
+
 }
