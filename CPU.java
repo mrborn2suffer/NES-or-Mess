@@ -652,4 +652,40 @@ public class CPU {
         P &= ~FLAG_OVERFLOW;
     }
 
+    private boolean getCarryFlag() 
+    {
+    return (P & FLAG_CARRY) != 0; 
+    }
+    private boolean getZeroFlag() 
+    { 
+    return (P & FLAG_ZERO) != 0; 
+    }
+    private boolean getInterruptFlag() 
+    { 
+    return (P & FLAG_INTERRUPT) != 0; 
+    }
+    private boolean getDecimalFlag() 
+    { 
+    return (P & FLAG_DECIMAL) != 0; 
+    }
+    private boolean getOverflowFlag() 
+    { 
+    return (P & FLAG_OVERFLOW) != 0; 
+    }
+    private boolean getNegativeFlag() 
+    { 
+    return (P & FLAG_NEGATIVE) != 0; 
+    }
+
+    private void push(byte value) 
+    {
+        memory.write(0x100 + SP, value);
+        SP = (SP - 1) & 0xFF;
+    }
+    
+    private int pop() 
+    {
+        SP = (SP + 1) & 0xFF;
+        return memory.read(0x100 + SP) & 0xFF;
+    }
 }
