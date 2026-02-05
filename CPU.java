@@ -688,4 +688,230 @@ public class CPU {
         SP = (SP + 1) & 0xFF;
         return memory.read(0x100 + SP) & 0xFF;
     }
+
+    private void ADC_IMM() 
+    {
+        int value = immediate();
+        ADC(value);
+        cycles += 2;
+    }
+    
+    private void ADC_ZP() 
+    {
+        int address = zeroPage();
+        int value = memory.read(address) & 0xFF;
+        ADC(value);
+        cycles += 3;
+    }
+    
+    private void ADC_ZPX() 
+    {
+        int address = zeroPageX();
+        int value = memory.read(address) & 0xFF;
+        ADC(value);
+        cycles += 4;
+    }
+    
+    private void ADC_ABS() 
+    {
+        int address = absolute();
+        int value = memory.read(address) & 0xFF;
+        ADC(value);
+        cycles += 4;
+    }
+    
+    private void ADC_ABSX() 
+    {
+        int baseAddress = absolute();
+        int address = baseAddress + X;
+        int value = memory.read(address) & 0xFF;
+        ADC(value);
+        cycles += 4;
+        if ((baseAddress & 0xFF00) != ((baseAddress + X) & 0xFF00)) 
+        cycles += 1;
+    }
+    
+    private void ADC_ABSY() 
+    {
+        int baseAddress = absolute();
+        int address = baseAddress + Y;
+        int value = memory.read(address) & 0xFF;
+        ADC(value);
+        cycles += 4;
+        if ((baseAddress & 0xFF00) != ((baseAddress + Y) & 0xFF00))
+        cycles += 1;
+    }
+    
+    private void ADC_INDX() 
+    {
+        int address = indexedIndirect();
+        int value = memory.read(address) & 0xFF;
+        ADC(value);
+        cycles += 6;
+    }
+    
+    private void ADC_INDY() 
+    {
+        int pointer = memory.read(PC) & 0xFF;
+        int baseAddress = readZeroPageWord(pointer);
+        PC = (PC + 1) & 0xFFFF;
+        int address = (baseAddress + Y) & 0xFFFF;
+        int value = memory.read(address) & 0xFF;
+        ADC(value);
+        cycles += 5;
+        if ((baseAddress & 0xFF00) != (address & 0xFF00)) 
+        cycles += 1;
+    }
+    
+    private void ADC(int value) 
+    {
+        int carry = getCarryFlag() ? 1 : 0;
+        int result = A + value + carry;
+        setCarryFlag(result > 0xFF);
+        setOverflowFlag(((A ^ result) & (value ^ result) & 0x80) != 0);
+        A = result & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+    }
+    
+    private void AND_IMM() 
+    {
+        int value = immediate();
+        A &= value;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 2;
+    }
+    
+    private void AND_ZP() 
+    {
+        int address = zeroPage();
+        A &= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 3;
+    }
+    
+    private void AND_ZPX() 
+    {
+        int address = zeroPageX();
+        A &= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 4;
+    }
+    
+    private void AND_ABS() 
+    {
+        int address = absolute();
+        A &= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 4;
+    }
+    
+    private void AND_ABSX() 
+    {
+        int baseAddress = absolute();
+        int address = baseAddress + X;
+        A &= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 4;
+        if ((baseAddress & 0xFF00) != ((baseAddress + X) & 0xFF00)) 
+        cycles += 1;
+    }
+    
+    private void AND_ABSY() 
+    {
+        int baseAddress = absolute();
+        int address = baseAddress + Y;
+        A &= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 4;
+        if ((baseAddress & 0xFF00) != ((baseAddress + Y) & 0xFF00))
+        cycles += 1;
+    }
+    
+    private void AND_INDX() 
+    {
+        int address = indexedIndirect();
+        A &= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 6;
+    }
+
+    private void AND_INDY() 
+    {
+        int pointer = memory.read(PC) & 0xFF;
+        int baseAddress = readZeroPageWord(pointer);
+        PC = (PC + 1) & 0xFFFF;
+        int address = (baseAddress + Y) & 0xFFFF;
+        A &= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 5;
+        if ((baseAddress & 0xFF00) != (address & 0xFF00)) 
+        cycles += 1;
+    }
+
+    private void ASL_ACC() 
+    {
+        setCarryFlag((A & 0x80) != 0);
+        A = (A << 1) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 2;
+    }
+    
+    private void ASL_ZP() 
+    {
+        int address = zeroPage();
+        int value = memory.read(address) & 0xFF;
+        setCarryFlag((value & 0x80) != 0);
+        value = (value << 1) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 5;
+    }
+    
+    private void ASL_ZPX() 
+    {
+        int address = zeroPageX();
+        int value = memory.read(address) & 0xFF;
+        setCarryFlag((value & 0x80) != 0);
+        value = (value << 1) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 6;
+    }
+    
+    private void ASL_ABS() 
+    {
+        int address = absolute();
+        int value = memory.read(address) & 0xFF;
+        setCarryFlag((value & 0x80) != 0);
+        value = (value << 1) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 6;
+    }
+    
+    private void ASL_ABSX() 
+    {
+        int address = absoluteX();
+        int value = memory.read(address) & 0xFF;
+        setCarryFlag((value & 0x80) != 0);
+        value = (value << 1) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 7;
+    }
+
 }
