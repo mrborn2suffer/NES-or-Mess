@@ -914,4 +914,59 @@ public class CPU {
         cycles += 7;
     }
 
+    private void BCC() 
+    {
+        int offset = immediate();
+        if (!getCarryFlag()) {
+            branch(offset);
+            cycles += 1;
+        }
+        cycles += 2;
+    }
+    
+    private void BCS() 
+    {
+        int offset = immediate();
+        if (getCarryFlag()) 
+        {
+            branch(offset);
+            cycles += 1;
+        }
+        cycles += 2;
+    }
+    
+    private void BEQ() 
+    {
+        int offset = immediate();
+        if (getZeroFlag()) 
+        {
+            branch(offset);
+            cycles += 1;
+        }
+        cycles += 2;
+    }
+    
+    private void BMI() 
+    {
+        int offset = immediate();
+        if (getNegativeFlag()) 
+        {
+            branch(offset);
+            cycles += 1;
+        }
+        cycles += 2;
+    }
+    
+    private void BNE() 
+    {
+        int offset = immediate();
+        if (!getZeroFlag()) 
+        {
+            branch(offset);
+            cycles += 1;
+        }
+        cycles += 2;
+    }
+
+
 }
