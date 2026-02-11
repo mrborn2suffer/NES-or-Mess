@@ -968,5 +968,171 @@ public class CPU {
         cycles += 2;
     }
 
+    private void BPL() 
+    {
+        int offset = immediate();
+        if (!getNegativeFlag()) 
+        {
+            branch(offset);
+            cycles += 1;
+        }
+        cycles += 2;
+    }
+    
+    private void BVC() 
+    {
+        int offset = immediate();
+        if (!getOverflowFlag())
+        {
+            branch(offset);
+            cycles += 1;
+        }
+        cycles += 2;
+    }
+    
+    private void BVS() 
+    {
+        int offset = immediate();
+        if (getOverflowFlag()) 
+        {
+            branch(offset);
+            cycles += 1;
+        }
+        cycles += 2;
+    }
+    
+    private void branch(int offset) 
+    {
+        if ((offset & 0x80) != 0) 
+        offset -= 256;
+        PC = (PC + offset) & 0xFFFF;
+    }
+    
+    private void BIT_ZP() 
+    {
+        int address = zeroPage();
+        int value = memory.read(address) & 0xFF;
+        BIT(value);
+        cycles += 3;
+    }
+    
+    private void BIT_ABS() 
+    {
+        int address = absolute();
+        int value = memory.read(address) & 0xFF;
+        BIT(value);
+        cycles += 4;
+    }
+    
+    private void BIT(int value) 
+    {
+        setZeroFlag((A & value) == 0);
+        P = (P & ~0xC0) | (value & 0xC0);
+    }
+    
+    private void CLC() 
+    {
+        setCarryFlag(false);
+        cycles += 2;
+    }
+    
+    private void CLD() 
+    {
+        P &= ~FLAG_DECIMAL;
+        cycles += 2;
+    }
+    
+    private void CLI() 
+    {
+        P &= ~FLAG_INTERRUPT;
+        cycles += 2;
+    }
+    
+    private void CLV() 
+    {
+        P &= ~FLAG_OVERFLOW;
+        cycles += 2;
+    }
+    
+    private void SEC() 
+    {
+        setCarryFlag(true);
+        cycles += 2;
+    }
+    
+    private void SED() 
+    {
+        P |= FLAG_DECIMAL;
+        cycles += 2;
+    }
+    
+    private void SEI() 
+    {
+        P |= FLAG_INTERRUPT;
+        cycles += 2;
+    }
+    
+    private void BRK() 
+    {
+        push((byte)((PC >> 8) & 0xFF));
+        push((byte)(PC & 0xFF));
+        push((byte)(P | FLAG_BREAK));
+        P |= FLAG_INTERRUPT;
+        PC = memory.readWord(0xFFFE) & 0xFFFF;
+        cycles += 7;
+    }
+    
+    private void CMP_IMM() 
+    {
+        int value = immediate();
+        CMP(value);
+        cycles += 2;
+    }
+    
+    private void CMP_ZP() 
+    {
+        int address = zeroPage();
+        int value = memory.read(address) & 0xFF;
+        CMP(value);
+        cycles += 3;
+    }
+    
+    private void CMP_ZPX() 
+    {
+        int address = zeroPageX();
+        int value = memory.read(address) & 0xFF;
+        CMP(value);
+        cycles += 4;
+    }
+    
+    private void CMP_ABS() 
+    {
+        int address = absolute();
+        int value = memory.read(address) & 0xFF;
+        CMP(value);
+        cycles += 4;
+    }
+    
+    private void CMP_ABSX() 
+    {
+        int baseAddress = absolute();
+        int address = baseAddress + X;
+        int value = memory.read(address) & 0xFF;
+        CMP(value);
+        cycles += 4;
+        if ((baseAddress & 0xFF00) != ((baseAddress + X) & 0xFF00))
+        cycles += 1;
+    }
+    
+    private void CMP_ABSY() 
+    {
+        int baseAddress = absolute();
+        int address = baseAddress + Y;
+        int value = memory.read(address) & 0xFF;
+        CMP(value);
+        cycles += 4;
+        if ((baseAddress & 0xFF00) != ((baseAddress + Y) & 0xFF00))
+        cycles += 1;
+    }
 
 }
