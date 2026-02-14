@@ -1135,4 +1135,95 @@ public class CPU {
         cycles += 1;
     }
 
+    private void CMP_INDX() 
+    {
+        int address = indexedIndirect();
+        int value = memory.read(address) & 0xFF;
+        CMP(value);
+        cycles += 6;
+    }
+    
+    private void CMP_INDY() 
+    {
+        int pointer = memory.read(PC) & 0xFF;
+        int baseAddress = readZeroPageWord(pointer);
+        PC = (PC + 1) & 0xFFFF;
+        int address = (baseAddress + Y) & 0xFFFF;
+        int value = memory.read(address) & 0xFF;
+        CMP(value);
+        cycles += 5;
+        if ((baseAddress & 0xFF00) != (address & 0xFF00))
+        cycles += 1;
+    }
+    
+    private void CMP(int value)
+    {
+        int result = A - value;
+        setCarryFlag(A >= value);
+        setZeroFlag(result == 0);
+        setNegativeFlag(result);
+    }
+    
+    private void CPX_IMM() 
+    {
+        int value = immediate();
+        CPX(value);
+        cycles += 2;
+    }
+    
+    private void CPX_ZP() 
+    {
+        int address = zeroPage();
+        int value = memory.read(address) & 0xFF;
+        CPX(value);
+        cycles += 3;
+    }
+    
+    private void CPX_ABS() 
+    {
+        int address = absolute();
+        int value = memory.read(address) & 0xFF;
+        CPX(value);
+        cycles += 4;
+    }
+    
+    private void CPX(int value) 
+    {
+        int result = X - value;
+        setCarryFlag(X >= value);
+        setZeroFlag(result == 0);
+        setNegativeFlag(result);
+    }
+    
+    private void CPY_IMM() 
+    {
+        int value = immediate();
+        CPY(value);
+        cycles += 2;
+    }
+    
+    private void CPY_ZP() 
+    {
+        int address = zeroPage();
+        int value = memory.read(address) & 0xFF;
+        CPY(value);
+        cycles += 3;
+    }
+    
+    private void CPY_ABS() 
+    {
+        int address = absolute();
+        int value = memory.read(address) & 0xFF;
+        CPY(value);
+        cycles += 4;
+    }
+    
+    private void CPY(int value) 
+    {
+        int result = Y - value;
+        setCarryFlag(Y >= value);
+        setZeroFlag(result == 0);
+        setNegativeFlag(result);
+    }
+
 }
