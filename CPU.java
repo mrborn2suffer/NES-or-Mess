@@ -1226,4 +1226,60 @@ public class CPU {
         setNegativeFlag(result);
     }
 
+    private void DEC_ZP() 
+    {
+        int address = zeroPage();
+        int value = (memory.read(address) - 1) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 5;
+    }
+    
+    private void DEC_ZPX() 
+    {
+        int address = zeroPageX();
+        int value = (memory.read(address) - 1) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 6;
+    }
+    
+    private void DEC_ABS() 
+    {
+        int address = absolute();
+        int value = (memory.read(address) - 1) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 6;
+    }
+    
+    private void DEC_ABSX() 
+    {
+        int address = absoluteX();
+        int value = (memory.read(address) - 1) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 7;
+    }
+    
+    private void DEX() 
+    {
+        X = (X - 1) & 0xFF;
+        setZeroFlag(X);
+        setNegativeFlag(X);
+        cycles += 2;
+    }
+    
+    private void DEY() 
+    {
+        Y = (Y - 1) & 0xFF;
+        setZeroFlag(Y);
+        setNegativeFlag(Y);
+        cycles += 2;
+    }
+
 }
