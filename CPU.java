@@ -1282,4 +1282,149 @@ public class CPU {
         cycles += 2;
     }
 
+    private void EOR_IMM() 
+    {
+        int value = immediate();
+        A ^= value;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 2;
+    }
+    
+    private void EOR_ZP() 
+    {
+        int address = zeroPage();
+        A ^= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 3;
+    }
+    
+    private void EOR_ZPX() 
+    {
+        int address = zeroPageX();
+        A ^= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 4;
+    }
+    
+    private void EOR_ABS() 
+    {
+        int address = absolute();
+        A ^= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 4;
+    }
+    
+    private void EOR_ABSX() 
+    {
+        int baseAddress = absolute();
+        int address = baseAddress + X;
+        A ^= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 4;
+        if ((baseAddress & 0xFF00) != ((baseAddress + X) & 0xFF00)) 
+        cycles += 1;
+    }
+    
+    private void EOR_ABSY() 
+    {
+        int baseAddress = absolute();
+        int address = baseAddress + Y;
+        A ^= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 4;
+        if ((baseAddress & 0xFF00) != ((baseAddress + Y) & 0xFF00)) 
+        cycles += 1;
+    }
+    
+    private void EOR_INDX() 
+    {
+        int address = indexedIndirect();
+        A ^= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 6;
+    }
+    
+    private void EOR_INDY() 
+    {
+        int pointer = memory.read(PC) & 0xFF;
+        int baseAddress = readZeroPageWord(pointer);
+        PC = (PC + 1) & 0xFFFF;
+        int address = (baseAddress + Y) & 0xFFFF;
+        A ^= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 5;
+        if ((baseAddress & 0xFF00) != (address & 0xFF00))
+        cycles += 1;
+    }
+    
+    private void INC_ZP() 
+    {
+        int address = zeroPage();
+        int value = (memory.read(address) + 1) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 5;
+    }
+    
+    private void INC_ZPX() 
+    {
+        int address = zeroPageX();
+        int value = (memory.read(address) + 1) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 6;
+    }
+    
+    private void INC_ABS() 
+    {
+        int address = absolute();
+        int value = (memory.read(address) + 1) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 6;
+    }
+    
+    private void INC_ABSX() 
+    {
+        int address = absoluteX();
+        int value = (memory.read(address) + 1) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 7;
+    }
+    
+    private void INX() 
+    {
+        X = (X + 1) & 0xFF;
+        setZeroFlag(X);
+        setNegativeFlag(X);
+        cycles += 2;
+    }
+    
+    private void INY() 
+    {
+        Y = (Y + 1) & 0xFF;
+        setZeroFlag(Y);
+        setNegativeFlag(Y);
+        cycles += 2;
+    }
+    
+    private void JMP_ABS() 
+    {
+        PC = absolute();
+        cycles += 3;
+    }
+
 }
