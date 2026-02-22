@@ -1427,4 +1427,55 @@ public class CPU {
         cycles += 3;
     }
 
+    private void JMP_IND() 
+    {
+        int address = absolute();
+        if ((address & 0xFF) == 0xFF) 
+        {
+            int low = memory.read(address) & 0xFF;
+            int high = memory.read(address & 0xFF00) & 0xFF;
+            PC = (high << 8) | low;
+        } 
+        else 
+        {
+            PC = memory.readWord(address) & 0xFFFF;
+        }
+        cycles += 5;
+    }
+    
+    private void JSR() 
+    {
+        int address = absolute();
+        push((byte)((PC - 1) >> 8));
+        push((byte)(PC - 1));
+        PC = address;
+        cycles += 6;
+    }
+    
+    private void LDA_IMM() 
+    {
+        A = immediate();
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 2;
+    }
+    
+    private void LDA_ZP() 
+    {
+        int address = zeroPage();
+        A = memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 3;
+    }
+    
+    private void LDA_ZPX() 
+    {
+        int address = zeroPageX();
+        A = memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 4;
+    }
+    
 }
