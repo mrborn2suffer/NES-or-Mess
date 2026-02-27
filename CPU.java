@@ -1478,4 +1478,299 @@ public class CPU {
         cycles += 4;
     }
     
+    private void LDA_ABS() 
+    {
+        int address = absolute();
+        A = memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 4;
+    }
+    
+    private void LDA_ABSX() 
+    {
+        int baseAddress = absolute();
+        int address = baseAddress + X;
+        A = memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 4;
+        if ((baseAddress & 0xFF00) != ((baseAddress + X) & 0xFF00))
+        cycles += 1;
+    }
+    
+    private void LDA_ABSY() 
+    {
+        int baseAddress = absolute();
+        int address = baseAddress + Y;
+        A = memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 4;
+        if ((baseAddress & 0xFF00) != ((baseAddress + Y) & 0xFF00)) 
+        cycles += 1;
+    }
+    
+    private void LDA_INDX() 
+    {
+        int address = indexedIndirect();
+        A = memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 6;
+    }
+    
+    private void LDA_INDY() 
+    {
+        int pointer = memory.read(PC) & 0xFF;
+        int baseAddress = readZeroPageWord(pointer);
+        PC = (PC + 1) & 0xFFFF;
+        int address = (baseAddress + Y) & 0xFFFF;
+        A = memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 5;
+        if ((baseAddress & 0xFF00) != (address & 0xFF00)) 
+        cycles += 1;
+    }
+    
+    private void LDX_IMM() 
+    {
+        X = immediate();
+        setZeroFlag(X);
+        setNegativeFlag(X);
+        cycles += 2;
+    }
+    
+    private void LDX_ZP()
+    {
+        int address = zeroPage();
+        X = memory.read(address) & 0xFF;
+        setZeroFlag(X);
+        setNegativeFlag(X);
+        cycles += 3;
+    }
+    
+    private void LDX_ZPY() 
+    {
+        int address = zeroPageY();
+        X = memory.read(address) & 0xFF;
+        setZeroFlag(X);
+        setNegativeFlag(X);
+        cycles += 4;
+    }
+    
+    private void LDX_ABS() 
+    {
+        int address = absolute();
+        X = memory.read(address) & 0xFF;
+        setZeroFlag(X);
+        setNegativeFlag(X);
+        cycles += 4;
+    }
+    
+    private void LDX_ABSY() 
+    {
+        int baseAddress = absolute();
+        int address = baseAddress + Y;
+        X = memory.read(address) & 0xFF;
+        setZeroFlag(X);
+        setNegativeFlag(X);
+        cycles += 4;
+        if ((baseAddress & 0xFF00) != ((baseAddress + Y) & 0xFF00)) 
+        cycles += 1;
+    }
+    
+    private void LDY_IMM() 
+    {
+        Y = immediate();
+        setZeroFlag(Y);
+        setNegativeFlag(Y);
+        cycles += 2;
+    }
+    
+    private void LDY_ZP() 
+    {
+        int address = zeroPage();
+        Y = memory.read(address) & 0xFF;
+        setZeroFlag(Y);
+        setNegativeFlag(Y);
+        cycles += 3;
+    }
+    
+    private void LDY_ZPX() 
+    {
+        int address = zeroPageX();
+        Y = memory.read(address) & 0xFF;
+        setZeroFlag(Y);
+        setNegativeFlag(Y);
+        cycles += 4;
+    }
+    
+    private void LDY_ABS() 
+    {
+        int address = absolute();
+        Y = memory.read(address) & 0xFF;
+        setZeroFlag(Y);
+        setNegativeFlag(Y);
+        cycles += 4;
+    }
+    
+    private void LDY_ABSX() 
+    {
+        int baseAddress = absolute();
+        int address = baseAddress + X;
+        Y = memory.read(address) & 0xFF;
+        setZeroFlag(Y);
+        setNegativeFlag(Y);
+        cycles += 4;
+        if ((baseAddress & 0xFF00) != ((baseAddress + X) & 0xFF00)) 
+        cycles += 1;
+    }
+    
+    private void LSR_ACC() 
+    {
+        setCarryFlag((A & 0x01) != 0);
+        A = (A >> 1) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 2;
+    }
+    
+    private void LSR_ZP() 
+    {
+        int address = zeroPage();
+        int value = memory.read(address) & 0xFF;
+        setCarryFlag((value & 0x01) != 0);
+        value = (value >> 1) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 5;
+    }
+    
+    private void LSR_ZPX() 
+    {
+        int address = zeroPageX();
+        int value = memory.read(address) & 0xFF;
+        setCarryFlag((value & 0x01) != 0);
+        value = (value >> 1) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 6;
+    }
+    
+    private void LSR_ABS() 
+    {
+        int address = absolute();
+        int value = memory.read(address) & 0xFF;
+        setCarryFlag((value & 0x01) != 0);
+        value = (value >> 1) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 6;
+    }
+    
+    private void LSR_ABSX() 
+    {
+        int address = absoluteX();
+        int value = memory.read(address) & 0xFF;
+        setCarryFlag((value & 0x01) != 0);
+        value = (value >> 1) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 7;
+    }
+    
+    private void NOP() 
+    {
+        cycles += 2;
+    }
+    
+    private void ORA_IMM() 
+    {
+        int value = immediate();
+        A |= value;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 2;
+    }
+    
+    private void ORA_ZP() 
+    {
+        int address = zeroPage();
+        A |= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 3;
+    }
+    
+    private void ORA_ZPX() 
+    {
+        int address = zeroPageX();
+        A |= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 4;
+    }
+    
+    private void ORA_ABS() 
+    {
+        int address = absolute();
+        A |= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 4;
+    }
+    
+    private void ORA_ABSX() 
+    {
+        int baseAddress = absolute();
+        int address = baseAddress + X;
+        A |= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 4;
+        if ((baseAddress & 0xFF00) != ((baseAddress + X) & 0xFF00)) 
+        cycles += 1;
+    }
+    
+    private void ORA_ABSY() 
+    {
+        int baseAddress = absolute();
+        int address = baseAddress + Y;
+        A |= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 4;
+        if ((baseAddress & 0xFF00) != ((baseAddress + Y) & 0xFF00)) 
+        cycles += 1;
+    }
+    
+    private void ORA_INDX() 
+    {
+        int address = indexedIndirect();
+        A |= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 6;
+    }
+    
+    private void ORA_INDY() 
+    {
+        int pointer = memory.read(PC) & 0xFF;
+        int baseAddress = readZeroPageWord(pointer);
+        PC = (PC + 1) & 0xFFFF;
+        int address = (baseAddress + Y) & 0xFFFF;
+        A |= memory.read(address) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 5;
+        if ((baseAddress & 0xFF00) != (address & 0xFF00)) 
+        cycles += 1;
+    }
+
 }
