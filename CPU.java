@@ -1773,4 +1773,103 @@ public class CPU {
         cycles += 1;
     }
 
+    private void PHA() 
+    {
+        push((byte)A);
+        cycles += 3;
+    }
+    
+    private void PHP() 
+    {
+        push((byte)(P | FLAG_BREAK | FLAG_UNUSED));
+        cycles += 3;
+    }
+    
+    private void PLA() 
+    {
+        A = pop();
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 4;
+    }
+    
+    private void PLP() 
+    {
+        P = pop() & ~FLAG_BREAK;
+        P |= FLAG_UNUSED;
+        cycles += 4;
+    }
+    
+    private void ROL_ACC() 
+    {
+        int carry = getCarryFlag() ? 1 : 0;
+        setCarryFlag((A & 0x80) != 0);
+        A = ((A << 1) | carry) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 2;
+    }
+    
+    private void ROL_ZP() 
+    {
+        int address = zeroPage();
+        int value = memory.read(address) & 0xFF;
+        int carry = getCarryFlag() ? 1 : 0;
+        setCarryFlag((value & 0x80) != 0);
+        value = ((value << 1) | carry) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 5;
+    }
+    
+    private void ROL_ZPX() 
+    {
+        int address = zeroPageX();
+        int value = memory.read(address) & 0xFF;
+        int carry = getCarryFlag() ? 1 : 0;
+        setCarryFlag((value & 0x80) != 0);
+        value = ((value << 1) | carry) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 6;
+    }
+    
+    private void ROL_ABS() 
+    {
+        int address = absolute();
+        int value = memory.read(address) & 0xFF;
+        int carry = getCarryFlag() ? 1 : 0;
+        setCarryFlag((value & 0x80) != 0);
+        value = ((value << 1) | carry) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 6;
+    }
+    
+    private void ROL_ABSX() 
+    {
+        int address = absoluteX();
+        int value = memory.read(address) & 0xFF;
+        int carry = getCarryFlag() ? 1 : 0;
+        setCarryFlag((value & 0x80) != 0);
+        value = ((value << 1) | carry) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 7;
+    }
+    
+    private void ROR_ACC() 
+    {
+        int carry = getCarryFlag() ? 0x80 : 0;
+        setCarryFlag((A & 0x01) != 0);
+        A = ((A >> 1) | carry) & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 2;
+    }
+
 }
