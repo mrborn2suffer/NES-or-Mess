@@ -1872,4 +1872,116 @@ public class CPU {
         cycles += 2;
     }
 
+    private void ROR_ZP() 
+    {
+        int address = zeroPage();
+        int value = memory.read(address) & 0xFF;
+        int carry = getCarryFlag() ? 0x80 : 0;
+        setCarryFlag((value & 0x01) != 0);
+        value = ((value >> 1) | carry) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 5;
+    }
+    
+    private void ROR_ZPX() 
+    {
+        int address = zeroPageX();
+        int value = memory.read(address) & 0xFF;
+        int carry = getCarryFlag() ? 0x80 : 0;
+        setCarryFlag((value & 0x01) != 0);
+        value = ((value >> 1) | carry) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 6;
+    }
+    
+    private void ROR_ABS() 
+    {
+        int address = absolute();
+        int value = memory.read(address) & 0xFF;
+        int carry = getCarryFlag() ? 0x80 : 0;
+        setCarryFlag((value & 0x01) != 0);
+        value = ((value >> 1) | carry) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 6;
+    }
+    
+    private void ROR_ABSX() 
+    {
+        int address = absoluteX();
+        int value = memory.read(address) & 0xFF;
+        int carry = getCarryFlag() ? 0x80 : 0;
+        setCarryFlag((value & 0x01) != 0);
+        value = ((value >> 1) | carry) & 0xFF;
+        memory.write(address, (byte)value);
+        setZeroFlag(value);
+        setNegativeFlag(value);
+        cycles += 7;
+    }
+    
+    private void RTI() 
+    {
+        P = pop() & ~FLAG_BREAK;
+        P |= FLAG_UNUSED;
+        int low = pop();
+        int high = pop();
+        PC = (high << 8) | low;
+        cycles += 6;
+    }
+    
+    private void RTS() 
+    {
+        int low = pop();
+        int high = pop();
+        PC = ((high << 8) | low) + 1;
+        cycles += 6;
+    }
+    
+    private void SBC_IMM() 
+    {
+        int value = immediate();
+        SBC(value);
+        cycles += 2;
+    }
+    
+    private void SBC_ZP() 
+    {
+        int address = zeroPage();
+        int value = memory.read(address) & 0xFF;
+        SBC(value);
+        cycles += 3;
+    }
+    
+    private void SBC_ZPX() 
+    {
+        int address = zeroPageX();
+        int value = memory.read(address) & 0xFF;
+        SBC(value);
+        cycles += 4;
+    }
+    
+    private void SBC_ABS() 
+    {
+        int address = absolute();
+        int value = memory.read(address) & 0xFF;
+        SBC(value);
+        cycles += 4;
+    }
+    
+    private void SBC_ABSX() 
+    {
+        int baseAddress = absolute();
+        int address = baseAddress + X;
+        int value = memory.read(address) & 0xFF;
+        SBC(value);
+        cycles += 4;
+        if ((baseAddress & 0xFF00) != ((baseAddress + X) & 0xFF00)) 
+        cycles += 1;
+    }
+    
 }
