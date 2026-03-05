@@ -1984,4 +1984,108 @@ public class CPU {
         cycles += 1;
     }
     
+    private void SBC_ABSY() 
+    {
+        int baseAddress = absolute();
+        int address = baseAddress + Y;
+        int value = memory.read(address) & 0xFF;
+        SBC(value);
+        cycles += 4;
+        if ((baseAddress & 0xFF00) != ((baseAddress + Y) & 0xFF00)) 
+        cycles += 1;
+    }
+    
+    private void SBC_INDX() 
+    {
+        int address = indexedIndirect();
+        int value = memory.read(address) & 0xFF;
+        SBC(value);
+        cycles += 6;
+    }
+    
+    private void SBC_INDY() 
+    {
+        int pointer = memory.read(PC) & 0xFF;
+        int baseAddress = readZeroPageWord(pointer);
+        PC = (PC + 1) & 0xFFFF;
+        int address = (baseAddress + Y) & 0xFFFF;
+        int value = memory.read(address) & 0xFF;
+        SBC(value);
+        cycles += 5;
+        if ((baseAddress & 0xFF00) != (address & 0xFF00)) 
+        cycles += 1;
+    }
+    
+    private void SBC(int value) 
+    {
+        int carry = getCarryFlag() ? 1 : 0;
+        int result = A - value - (1 - carry);
+        setCarryFlag(result >= 0);
+        setOverflowFlag(((A ^ result) & ((~value) ^ result) & 0x80) != 0);
+        A = result & 0xFF;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+    }
+    
+    private void STA_ZP() 
+    {
+        int address = zeroPage();
+        memory.write(address, (byte)A);
+        cycles += 3;
+    }
+    
+    private void STA_ZPX() 
+    {
+        int address = zeroPageX();
+        memory.write(address, (byte)A);
+        cycles += 4;
+    }
+    
+    private void STA_ABS() 
+    {
+        int address = absolute();
+        memory.write(address, (byte)A);
+        cycles += 4;
+    }
+    
+    private void STA_ABSX() 
+    {
+        int baseAddress = absolute();
+        int address = baseAddress + X;
+        memory.write(address, (byte)A);
+        cycles += 5;
+    }
+    
+    private void STA_ABSY() 
+    {
+        int baseAddress = absolute();
+        int address = baseAddress + Y;
+        memory.write(address, (byte)A);
+        cycles += 5;
+    }
+    
+    private void STA_INDX() 
+    {
+        int address = indexedIndirect();
+        memory.write(address, (byte)A);
+        cycles += 6;
+    }
+    
+    private void STA_INDY() 
+    {
+        int pointer = memory.read(PC) & 0xFF;
+        int baseAddress = readZeroPageWord(pointer);
+        PC = (PC + 1) & 0xFFFF;
+        int address = (baseAddress + Y) & 0xFFFF;
+        memory.write(address, (byte)A);
+        cycles += 6; 
+    }
+    
+    private void STX_ZP() 
+    {
+        int address = zeroPage();
+        memory.write(address, (byte)X);
+        cycles += 3;
+    }
+
 }
