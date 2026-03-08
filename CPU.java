@@ -2088,4 +2088,39 @@ public class CPU {
         cycles += 3;
     }
 
+    private void STX_ZPY() 
+    {
+        int address = zeroPageY();
+        memory.write(address, (byte)X);
+        cycles += 4;
+    }
+    
+    private void STX_ABS() 
+    {
+        int address = absolute();
+        memory.write(address, (byte)X);
+        cycles += 4;
+    }
+    
+    private void STY_ZP() 
+    {
+        int address = zeroPage();
+        memory.write(address, (byte)Y);
+        cycles += 3;
+    }
+    
+    private void STY_ZPX() 
+    {
+        int address = zeroPageX();
+        memory.write(address, (byte)Y);
+        cycles += 4;
+    }
+    
+    private void STY_ABS() 
+    {
+        int address = absolute();
+        memory.write(address, (byte)Y);
+        cycles += 4;
+    }
+    
 }
