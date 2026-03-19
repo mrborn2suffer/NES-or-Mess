@@ -2123,4 +2123,85 @@ public class CPU {
         cycles += 4;
     }
     
+    private void TAX() 
+    {
+        X = A;
+        setZeroFlag(X);
+        setNegativeFlag(X);
+        cycles += 2;
+    }
+    
+    private void TAY() 
+    {
+        Y = A;
+        setZeroFlag(Y);
+        setNegativeFlag(Y);
+        cycles += 2;
+    }
+    
+    private void TSX() 
+    {
+        X = SP;
+        setZeroFlag(X);
+        setNegativeFlag(X);
+        cycles += 2;
+    }
+    
+    private void TXA() 
+    {
+        A = X;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 2;
+    }
+    
+    private void TXS() 
+    {
+        SP = X;
+        cycles += 2;
+    }
+    
+    private void TYA() 
+    {
+        A = Y;
+        setZeroFlag(A);
+        setNegativeFlag(A);
+        cycles += 2;
+    }
+    
+    private void NOP_IMM() 
+    {
+        immediate(); 
+        cycles += 2;
+    }
+    
+    private void NOP_ZP() 
+    {
+        zeroPage(); 
+        cycles += 3;
+    }
+    
+    private void NOP_ZPX() 
+    {
+        zeroPageX(); 
+        cycles += 4;
+    }
+    
+    private void NOP_ABS() 
+    {
+        absolute(); 
+        cycles += 4;
+    }
+    
+    private void NOP_ABSX() 
+    {
+        absoluteX(); 
+        cycles += 4;
+    }
+    
+    private void NOP_IMplied() 
+    {
+        cycles += 2;
+    }
+
 }
