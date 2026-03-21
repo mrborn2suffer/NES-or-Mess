@@ -2204,4 +2204,65 @@ public class CPU {
         cycles += 2;
     }
 
+    private void handleNMI() 
+    {
+        push((byte)((PC >> 8) & 0xFF));
+        push((byte)(PC & 0xFF));
+        push((byte)(P & ~FLAG_BREAK));
+        P |= FLAG_INTERRUPT;
+        PC = memory.readWord(0xFFFA) & 0xFFFF;
+        cycles += 7;
+    }
+    
+    private void handleIRQ() 
+    {
+        push((byte)((PC >> 8) & 0xFF));
+        push((byte)(PC & 0xFF));
+        push((byte)(P & ~FLAG_BREAK));
+        P |= FLAG_INTERRUPT;
+        PC = memory.readWord(0xFFFE) & 0xFFFF;
+        cycles += 7;
+    }
+    
+    public void triggerNMI() 
+    { 
+    nmiPending = true; 
+    }
+    public void triggerIRQ() 
+    {
+    irqPending = true; 
+    }
+    
+    public int getA() 
+    {
+         return A; 
+    }
+    public int getX() 
+    {
+         return X; 
+    }
+    public int getY() 
+    { 
+        return Y; 
+    }
+    public int getSP() 
+    { 
+    return SP; 
+    }
+    public int getPC() 
+    { 
+    return PC; 
+    }
+    public int getP() 
+    { 
+    return P; 
+    }
+    public int getCycles() 
+    { 
+    return cycles; 
+    }
+    public void addCycles(int extraCycles) 
+    {
+        this.cycles += extraCycles;
+    }
 }
