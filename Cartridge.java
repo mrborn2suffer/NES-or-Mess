@@ -79,4 +79,85 @@ public class Cartridge
         }
     }
 
+    public byte readPRG(int address) 
+    {
+
+        if (mapperID == 0) //Mapper 0
+            return prgROM[address % prgROM.length];
+
+        else if (mapperID == 2) //Mapper 2
+        {
+            if (address < 0x4000) 
+                return prgROM[(prgBankSelect * 0x4000) + address]; 
+            else 
+                return prgROM[prgROM.length - 0x4000 + (address - 0x4000)]; 
+        } 
+
+        else if (mapperID == 3) //Mapper 3
+            return prgROM[address % prgROM.length];
+
+        else if (mapperID == 4) //Mapper 4
+        {
+            if (address < 0x2000) 
+                return prgROM[prgBank0 + address];
+            else if (address < 0x4000) 
+                return prgROM[prgBank1 + (address - 0x2000)];
+            else if (address < 0x6000) 
+                return prgROM[prgBank2 + (address - 0x4000)];
+            else 
+                return prgROM[prgBank3 + (address - 0x6000)];
+        } 
+
+        else if (mapperID == 7) //Mapper 7 
+        {
+            return prgROM[(prgBankSelect * 32768) + (address % 32768)];
+        }
+        return prgROM[address % prgROM.length];
+    }
+
+    public void writePRG(int address, byte value) 
+    {
+
+        if (mapperID == 2) 
+        {
+            prgBankSelect = value & 0x0F; 
+        } 
+
+        else if (mapperID == 3) 
+        {
+            chrBankSelect = value & 0x03; 
+        } 
+        
+        else if (mapperID == 7) 
+        {
+            int maxBanks = prgROM.length / 32768;
+            prgBankSelect = (value & 0x07) % maxBanks; 
+            mirrorMode = ((value & 0x10) != 0) ? 3 : 2; 
+        } 
+        
+        else if (mapperID == 4) 
+        {
+            int realAddress = address + 0x8000;
+            if (realAddress >= 0x8000 && realAddress <= 0x9FFF) 
+                {
+                if ((realAddress % 2) == 0) 
+                {
+                    bankSelect = value & 0x07;
+                    prgBankMode = (value >> 6) & 0x01;
+                    chrBankMode = (value >> 7) & 0x01;
+                } 
+                else 
+                {
+                    registers[bankSelect] = value & 0xFF;
+                    updateMMC3Pointers();
+                }
+            } 
+            else if (realAddress >= 0xA000 && realAddress <= 0xBFFF) 
+            {
+                if ((realAddress % 2) == 0) 
+                    mirrorMode = ((value & 0x01) == 0) ? 1 : 0; 
+            }
+        }
+    }
+
 }
