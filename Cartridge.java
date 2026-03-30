@@ -160,4 +160,87 @@ public class Cartridge
         }
     }
 
+    private void updateMMC3Pointers() 
+    {
+        int prgLength = prgROM.length;
+        int fixedBank1 = prgLength - 0x4000; 
+        int fixedBank2 = prgLength - 0x2000; 
+
+        if (prgBankMode == 0) 
+        {
+            prgBank0 = (registers[6] * 0x2000) % prgLength;
+            prgBank1 = (registers[7] * 0x2000) % prgLength;
+            prgBank2 = fixedBank1;
+            prgBank3 = fixedBank2;
+        } 
+        else 
+        {
+            prgBank0 = fixedBank1;
+            prgBank1 = (registers[7] * 0x2000) % prgLength;
+            prgBank2 = (registers[6] * 0x2000) % prgLength;
+            prgBank3 = fixedBank2;
+        }
+
+        int chrLen = chrROM.length;
+        if (chrLen > 0) 
+        {
+            if (chrBankMode == 0) 
+            {
+                chrBankOffsets[0] = ((registers[0] & 0xFE) * 0x400) % chrLen;
+                chrBankOffsets[1] = ((registers[0] | 0x01) * 0x400) % chrLen;
+                chrBankOffsets[2] = ((registers[1] & 0xFE) * 0x400) % chrLen;
+                chrBankOffsets[3] = ((registers[1] | 0x01) * 0x400) % chrLen;
+                chrBankOffsets[4] = (registers[2] * 0x400) % chrLen;
+                chrBankOffsets[5] = (registers[3] * 0x400) % chrLen;
+                chrBankOffsets[6] = (registers[4] * 0x400) % chrLen;
+                chrBankOffsets[7] = (registers[5] * 0x400) % chrLen;
+            } 
+            
+            else 
+            {
+                chrBankOffsets[0] = (registers[2] * 0x400) % chrLen;
+                chrBankOffsets[1] = (registers[3] * 0x400) % chrLen;
+                chrBankOffsets[2] = (registers[4] * 0x400) % chrLen;
+                chrBankOffsets[3] = (registers[5] * 0x400) % chrLen;
+                chrBankOffsets[4] = ((registers[0] & 0xFE) * 0x400) % chrLen;
+                chrBankOffsets[5] = ((registers[0] | 0x01) * 0x400) % chrLen;
+                chrBankOffsets[6] = ((registers[1] & 0xFE) * 0x400) % chrLen;
+                chrBankOffsets[7] = ((registers[1] | 0x01) * 0x400) % chrLen;
+            }
+        }
+    }
+
+    public byte readCHR(int address) 
+    {
+        if (mapperID == 3) 
+        {
+            return chrROM[(chrBankSelect * 0x2000) + address];
+        } 
+        else if (mapperID == 4) 
+        {
+            int window = (address / 0x400) & 7;
+            int offset = address % 0x400;
+            return chrROM[chrBankOffsets[window] + offset];
+        }
+        return chrROM[address % chrROM.length];
+    }
+
+    public void writeCHR(int address, byte value) 
+    {
+        chrROM[address % chrROM.length] = value; 
+    }
+
+    public byte readPRGRAM(int address) 
+    { 
+    return prgRAM[address & 0x1FFF]; 
+    }
+    public void writePRGRAM(int address, byte value) 
+    { 
+    prgRAM[address & 0x1FFF] = value; 
+    }
+    public int getMirrorMode() 
+    { 
+    return mirrorMode; 
+    }
+
 }
