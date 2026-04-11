@@ -61,4 +61,119 @@ public class PPU
             vramAddr = (vramAddr & ~0x03E0) | (y << 5);
         }
     }
+
+    public void step() 
+    {
+        if (scanline < 240 && cycle >= 1 && cycle <= 256) 
+        {
+            renderPixel(cycle - 1, scanline);
+        }
+        cycle++;
+        
+        if (cycle > 340) 
+        {
+            cycle = 0;
+            scanline++;
+            if (scanline > 261) 
+            {
+                scanline = 0;
+                frame++;
+            }
+        }
+
+        boolean renderingEnabled = (mask & 0x18) != 0;
+
+        if (scanline == 261 && cycle == 1) 
+        {
+            status &= ~0xE0; 
+        }
+
+        if (scanline == 261 && cycle >= 280 && cycle <= 304) 
+        {
+            if (renderingEnabled) 
+            {
+                vramAddr = (vramAddr & 0x041F) | (tempVramAddr & 0x7BE0);
+            }
+        }
+
+        if (renderingEnabled && (scanline < 240 || scanline == 261)) 
+        {
+            if (cycle == 256) 
+                incrementY();
+
+            if (cycle == 257) 
+            {
+                vramAddr = (vramAddr & 0xFBE0) | (tempVramAddr & 0x041F);
+                oamAddr = 0;
+                
+                if (scanline < 240) 
+                {
+                    int spriteCount = 0;
+                    boolean is8x16 = (control & 0x20) != 0;
+                    int spriteHeight = is8x16 ? 16 : 8;
+                    for (int i = 0; i < 64; i++) 
+                    {
+                        int spriteY = (oam[i * 4] & 0xFF) + 1;
+                        if (scanline >= spriteY && scanline < spriteY + spriteHeight) 
+                        spriteCount++;
+                    }
+
+                    if (spriteCount > 8) 
+                    status |= 0x20;
+                }
+            }
+        }
+
+        if (scanline == 241 && cycle == 1) 
+        {
+            status |= 0x80;
+            if ((control & 0x80) != 0 && cpu != null) 
+            cpu.triggerNMI();
+        }
+    }
+
+    private void renderPixel(int x, int y) 
+    {
+        int bgColor = 0;
+        boolean bgOpaque = false;
+        
+        boolean showBg = (mask & 0x08) != 0 && ((mask & 0x02) != 0 || x >= 8);
+        boolean showSprites = (mask & 0x10) != 0 && ((mask & 0x04) != 0 || x >= 8);
+        
+        if (showBg) 
+        {
+            int scrollX = ((vramAddr & 0x001F) << 3) | fineX;
+            int pixelX = scrollX + x;
+            int effectiveTileX = pixelX / 8;
+            int effectiveTileY = (vramAddr & 0x03E0) >> 5;
+            int fineY = (vramAddr >> 12) & 7;
+            
+            int nameTableAddr = 0x2000 | (vramAddr & 0x0C00);
+            if (effectiveTileX >= 32) 
+            {
+                effectiveTileX -= 32;
+                nameTableAddr ^= 0x0400;
+            }
+            
+            int patternAddr = getPatternAddress(nameTableAddr, effectiveTileX, effectiveTileY);
+            int patternLow  = readVRAM(patternAddr + fineY) & 0xFF;
+            int patternHigh = readVRAM(patternAddr + 8 + fineY) & 0xFF;
+            
+            int bit = 7 - (pixelX % 8);
+            int bgPaletteIndex = ((patternHigh >> bit) & 1) << 1 | ((patternLow >> bit) & 1);
+            
+            bgOpaque = (bgPaletteIndex != 0); 
+            
+            int attrAddr = nameTableAddr + 0x03C0 + ((effectiveTileY / 4) * 8) + (effectiveTileX / 4);
+            int attrByte = readVRAM(attrAddr) & 0xFF;
+            
+            int shift = ((effectiveTileY % 4) / 2) * 4 + ((effectiveTileX % 4) / 2) * 2;
+            int paletteNum = (attrByte >> shift) & 0x03;
+            
+            bgColor = getColorFromPalette(paletteNum, bgPaletteIndex);
+        } 
+        else 
+        {
+            bgColor = getColorFromPalette(0, 0); 
+        }
 }
