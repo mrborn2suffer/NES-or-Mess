@@ -177,3 +177,72 @@ public class PPU
             bgColor = getColorFromPalette(0, 0); 
         }
 }
+
+int spriteColor = 0;
+        boolean spriteOpaque = false;
+        boolean spritePriority = false;
+        boolean isSpriteZero = false;
+        
+        if (showSprites) 
+        {
+            boolean is8x16 = (control & 0x20) != 0;
+            int spriteHeight = is8x16 ? 16 : 8;
+            
+            for (int i = 0; i < 64; i++) 
+            {
+                int spriteY     = oam[i * 4] & 0xFF;
+                int spriteIndex = oam[i * 4 + 1] & 0xFF;
+                int spriteAttr  = oam[i * 4 + 2] & 0xFF;
+                int spriteX     = oam[i * 4 + 3] & 0xFF;
+                
+                spriteY += 1; 
+                
+                if (y >= spriteY && y < spriteY + spriteHeight) 
+                {
+                    int spriteRow = y - spriteY;
+                    if ((spriteAttr & 0x80) != 0) 
+                    spriteRow = (spriteHeight - 1) - spriteRow;
+                    
+                    int patternAddr;
+                    if (is8x16) 
+                    {
+                        int table = (spriteIndex & 1) * 0x1000;
+                        int tile = spriteIndex & 0xFE;
+                        if (spriteRow >= 8) 
+                        {
+                            tile++; 
+                            spriteRow -= 8;
+                        }
+                        patternAddr = table + tile * 16 + spriteRow;
+                    } 
+                    else 
+                    {
+                        int table = (control & 0x08) != 0 ? 0x1000 : 0x0000;
+                        patternAddr = table + spriteIndex * 16 + spriteRow;
+                    }
+                    
+                    int patternLow  = readVRAM(patternAddr) & 0xFF;
+                    int patternHigh = readVRAM(patternAddr + 8) & 0xFF;
+                    
+                    int spriteCol = x - spriteX;
+                    if (spriteCol >= 0 && spriteCol < 8) 
+                    {
+                        if ((spriteAttr & 0x40) != 0) 
+                        spriteCol = 7 - spriteCol;
+                        
+                        int bit = 7 - spriteCol;
+                        int spritePaletteIndex = ((patternHigh >> bit) & 1) << 1 | ((patternLow >> bit) & 1);
+                        
+                        if (spritePaletteIndex != 0) 
+                        {
+                            spriteOpaque = true;
+                            spriteColor = getColorFromPalette(4 + (spriteAttr & 0x03), spritePaletteIndex);
+                            spritePriority = (spriteAttr & 0x20) == 0;
+                            isSpriteZero = (i == 0);
+                            break; 
+                        }
+                    }
+                }
+            }
+        }
+
