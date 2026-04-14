@@ -246,3 +246,32 @@ int spriteColor = 0;
             }
         }
 
+        int finalColor = bgColor;
+        if (spriteOpaque) 
+        {
+            if (!bgOpaque || spritePriority) 
+            finalColor = spriteColor;
+        }
+        
+        if (isSpriteZero && bgOpaque && x < 255 && showBg && showSprites) 
+        {
+            status |= 0x40; 
+        }
+        
+        screenBuffer[y * 256 + x] = finalColor;
+    }
+    
+    private int getPatternAddress(int nameTableAddr, int tileX, int tileY) 
+    {
+        int nameTableIndex = tileY * 32 + tileX;
+        int tileIndex = readVRAM(nameTableAddr + nameTableIndex) & 0xFF;
+        int patternTableAddr = (control & 0x10) != 0 ? 0x1000 : 0x0000;
+        return patternTableAddr + tileIndex * 16;
+    }
+    
+    private int getColorFromPalette(int paletteNum, int index) 
+    {
+        if (index == 0) 
+        return palette[0] & 0xFF; 
+        return palette[paletteNum * 4 + index] & 0xFF;
+    }
