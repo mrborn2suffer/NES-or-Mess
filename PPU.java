@@ -275,3 +275,93 @@ int spriteColor = 0;
         return palette[0] & 0xFF; 
         return palette[paletteNum * 4 + index] & 0xFF;
     }
+
+     public int readRegister(int address) 
+    {
+        switch (address) 
+        {
+            case 0x2002: 
+                int result = status;
+                writeToggle = false;
+                status &= ~0x80; 
+                
+                if (scanline == 241 && cycle == 1) 
+                {
+                    result &= ~0x80;
+                }
+                return result;
+
+            case 0x2004: 
+            return oam[oamAddr] & 0xFF;
+
+            case 0x2007: 
+                int dataValue = data;
+                data = readVRAM(vramAddr);
+                int returnVal = dataValue;
+                if (vramAddr >= 0x3F00) 
+                {
+                    returnVal = readVRAM(vramAddr); 
+                }
+                vramAddr = (vramAddr + ((control & 0x04) != 0 ? 32 : 1)) & 0x3FFF;
+                return returnVal;
+
+            default: 
+            return 0;
+        }
+    }
+    
+    public void writeRegister(int address, int value) 
+    {
+        switch (address) 
+        {
+            case 0x2000: 
+                boolean nmiPreviouslyEnabled = (control & 0x80) != 0;
+                control = value;
+                tempVramAddr = (tempVramAddr & 0xF3FF) | ((value & 0x03) << 10);
+                if (!nmiPreviouslyEnabled && (control & 0x80) != 0 && (status & 0x80) != 0) 
+                {
+                    if (cpu != null) 
+                    cpu.triggerNMI();
+                }
+                break;
+            case 0x2001: mask = value; 
+                break;
+            case 0x2003: oamAddr = value; 
+                break;
+            case 0x2004: 
+                oam[oamAddr] = (byte)value;
+                oamAddr = (oamAddr + 1) & 0xFF;
+                break;
+            case 0x2005: 
+                if (!writeToggle) 
+                {
+                    fineX = value & 0x07;
+                    tempVramAddr = (tempVramAddr & 0xFFE0) | (value >> 3);
+                    writeToggle = true;
+                } 
+                else 
+                {
+                    tempVramAddr = (tempVramAddr & 0x8FFF) | ((value & 0x07) << 12);
+                    tempVramAddr = (tempVramAddr & 0xFC1F) | ((value >> 3) << 5);
+                    writeToggle = false;
+                }
+                break;
+            case 0x2006: 
+                if (!writeToggle) 
+                {
+                    tempVramAddr = (tempVramAddr & 0x00FF) | ((value & 0x3F) << 8);
+                    writeToggle = true;
+                } 
+                else 
+                {
+                    tempVramAddr = (tempVramAddr & 0xFF00) | value;
+                    vramAddr = tempVramAddr;
+                    writeToggle = false;
+                }
+                break;
+            case 0x2007: 
+                writeVRAM(vramAddr, value);
+                vramAddr = (vramAddr + ((control & 0x04) != 0 ? 32 : 1)) & 0x3FFF;
+                break;
+        }
+    }
