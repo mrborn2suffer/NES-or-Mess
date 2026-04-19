@@ -176,7 +176,6 @@ public class PPU
         {
             bgColor = getColorFromPalette(0, 0); 
         }
-}
 
 int spriteColor = 0;
         boolean spriteOpaque = false;
@@ -365,3 +364,72 @@ int spriteColor = 0;
                 break;
         }
     }
+
+    private int readVRAM(int address) 
+    {
+        address &= 0x3FFF;
+        if (address < 0x2000) 
+        {
+            return memory.getCartridge() != null ? memory.getCartridge().readCHR(address) & 0xFF : 0;
+        } 
+        else if (address < 0x3F00) 
+        {
+            int mirroredAddr = address >= 0x3000 ? address - 0x1000 : address;
+            int mode = memory.getCartridge() != null ? memory.getCartridge().getMirrorMode() : 1;
+            
+            if (mode == 0) 
+                mirroredAddr = 0x2000 + ((mirroredAddr & 0x0800) >> 1) + (mirroredAddr & 0x03FF);
+            else if (mode == 1) 
+                mirroredAddr = 0x2000 + (mirroredAddr & 0x07FF);
+            else if (mode == 2) 
+                mirroredAddr = 0x2000 + (mirroredAddr & 0x03FF);
+            else if (mode == 3) 
+                mirroredAddr = 0x2400 + (mirroredAddr & 0x03FF);
+            
+            return vram[mirroredAddr - 0x2000] & 0xFF;
+        } 
+        else 
+        {
+            address &= 0x1F;
+            if (address >= 16 && (address & 0x03) == 0)
+                address -= 16;
+            return palette[address] & 0xFF;
+        }
+    }
+    
+    private void writeVRAM(int address, int value) 
+    {
+        address &= 0x3FFF;
+        if (address < 0x2000) 
+        {
+            if (memory.getCartridge() != null) 
+                memory.getCartridge().writeCHR(address, (byte)value);
+        } 
+        else if (address < 0x3F00) 
+        {
+            int mirroredAddr = address >= 0x3000 ? address - 0x1000 : address;
+            int mode = memory.getCartridge() != null ? memory.getCartridge().getMirrorMode() : 1;
+            
+            if (mode == 0) 
+                mirroredAddr = 0x2000 + ((mirroredAddr & 0x0800) >> 1) + (mirroredAddr & 0x03FF);
+            else if (mode == 1) 
+                mirroredAddr = 0x2000 + (mirroredAddr & 0x07FF);
+            else if (mode == 2) 
+                mirroredAddr = 0x2000 + (mirroredAddr & 0x03FF);
+            else if (mode == 3) 
+                mirroredAddr = 0x2400 + (mirroredAddr & 0x03FF);
+            
+            vram[mirroredAddr - 0x2000] = (byte)value;
+        } 
+        else 
+        {
+            address &= 0x1F;
+            if (address >= 16 && (address & 0x03) == 0) address -= 16;
+            palette[address] = (byte)value;
+        }
+    } 
+    public int[] getScreenBuffer() 
+    { 
+        return screenBuffer; 
+    }
+}
