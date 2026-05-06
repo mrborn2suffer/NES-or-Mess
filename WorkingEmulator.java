@@ -26,5 +26,67 @@ public class WorkingEmulator extends JFrame
     private Timer gameLoop;
     private boolean running = false;
 
+    public WorkingEmulator(String romPath) 
+    {
+        super("NES Emulator - " + romPath);
+
+        emulator = new NesEmulator();
+        emulator.loadCartridge(romPath);
+        screen = new BufferedImage(NES_W, NES_H, BufferedImage.TYPE_INT_RGB);
+        canvas = new JPanel() 
+        {
+            @Override
+            protected void paintComponent(Graphics g) 
+            {
+                super.paintComponent(g);
+                g.drawImage(screen, 0, 0, NES_W * SCALE, NES_H * SCALE, null);
+            }
+        };
+        canvas.setPreferredSize(new Dimension(NES_W * SCALE, NES_H * SCALE));
+        canvas.setBackground(Color.BLACK);
+
+        addKeyListener(new KeyAdapter() 
+        {
+            @Override public void keyPressed(KeyEvent e)  
+            { 
+                handleKey(e.getKeyCode(), true);  
+            }
+            @Override public void keyReleased(KeyEvent e) 
+            { 
+                handleKey(e.getKeyCode(), false); 
+            }
+        });
+
+        setContentPane(canvas);
+        pack();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
+        setVisible(true);
+        requestFocus();
+        startGameLoop();
+    }
+
+    private void startGameLoop() 
+    {
+        running = true;
+        gameLoop = new Timer(1000 / 60, e -> 
+            {
+            if (!running) 
+                return;
+            int cyclesThisFrame = 0;
+            while (cyclesThisFrame < 29780) 
+            {
+                int cyclesBefore = emulator.getCPU().getCycles();
+                emulator.step();
+                cyclesThisFrame += (emulator.getCPU().getCycles() - cyclesBefore);
+            }
+            
+            renderToBufferedImage();
+            canvas.repaint();
+        });
+        gameLoop.setCoalesce(true);
+        gameLoop.start();
+    }
     
 }
