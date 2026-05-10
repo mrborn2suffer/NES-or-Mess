@@ -89,4 +89,13 @@ public class WorkingEmulator extends JFrame
         gameLoop.start();
     }
     
+    private void renderToBufferedImage() 
+    {
+        int[] ppuBuffer = emulator.getPPU().getScreenBuffer();
+        for (int i = 0; i < NES_W * NES_H; i++) 
+        {
+            int nesIndex = ppuBuffer[i] & 0x3F;
+            screen.setRGB(i % NES_W, i / NES_W, NTSC_PALETTE[nesIndex]);
+        }
+    }
 }
