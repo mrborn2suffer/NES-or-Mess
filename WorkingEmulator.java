@@ -1,5 +1,7 @@
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
 
 public class WorkingEmulator extends JFrame 
 {
@@ -98,4 +100,60 @@ public class WorkingEmulator extends JFrame
             screen.setRGB(i % NES_W, i / NES_W, NTSC_PALETTE[nesIndex]);
         }
     }
+
+    private void handleKey(int code, boolean pressed) 
+    {
+        Controller controller = emulator.getMemory().getController();
+        if (controller == null) 
+        return;
+
+        switch (code) 
+        {
+            case KeyEvent.VK_SPACE: //Action
+            case KeyEvent.VK_Z:     
+                controller.setButtonState(Controller.BUTTON_A, pressed); 
+                break;
+            case KeyEvent.VK_J:
+            case KeyEvent.VK_X:     
+                controller.setButtonState(Controller.BUTTON_B, pressed); 
+                break;
+                
+            case KeyEvent.VK_SHIFT: //Menu
+                controller.setButtonState(Controller.BUTTON_SELECT, pressed); 
+                break;
+            case KeyEvent.VK_ENTER: 
+                controller.setButtonState(Controller.BUTTON_START, pressed); 
+                break;
+                
+            case KeyEvent.VK_W: //WASD & Arrow keys
+            case KeyEvent.VK_UP:    
+                controller.setButtonState(Controller.BUTTON_UP, pressed); 
+                break;
+            case KeyEvent.VK_S:
+            case KeyEvent.VK_DOWN:  
+                controller.setButtonState(Controller.BUTTON_DOWN, pressed); 
+                break;
+            case KeyEvent.VK_A:
+            case KeyEvent.VK_LEFT:  
+                controller.setButtonState(Controller.BUTTON_LEFT, pressed); 
+                break;
+            case KeyEvent.VK_D:
+            case KeyEvent.VK_RIGHT: 
+                controller.setButtonState(Controller.BUTTON_RIGHT, pressed); 
+                break;
+                
+            case KeyEvent.VK_ESCAPE:
+                running = false;
+                gameLoop.stop();
+                dispose();
+                break;
+        }
+    }
+
+    public static void main(String[] args) 
+    {
+        String romPath = args.length > 0 ? args[0] : "Donkey Kong (World) (Rev A).nes";
+        SwingUtilities.invokeLater(() -> new WorkingEmulator(romPath));
+    }
+   
 }
