@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="46448961-614a-4561-8ff0-6a3bdd8fe39a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Aladdin (Europe).nes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Battletoads (USA).nes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Donkey Kong (World) (Rev A).nes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NesEmulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/NesEmulator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Super Mario Bros 16 (Asia) (Ja) (Pirate).nes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WorkingEmulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/WorkingEmulator.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="3GefxJnWSnTqv4kBvXGATm85hje" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHELLCHECK.PATH": "/home/Vaibhav/.local/share/JetBrains/IntelliJIdea2026.2/Shell Script/shellcheck",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/Vaibhav/Projects/NES emu",
+    "nodejs_package_manager_path": "npm"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-63390994e64e-intellij.indexing.shared.core-IU-262.8665.258" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.8665.258" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="46448961-614a-4561-8ff0-6a3bdd8fe39a" name="Changes" comment="" />
+      <created>1784337203197</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1784337203197</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
