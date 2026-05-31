@@ -19,9 +19,13 @@ public class NesEmulator
     {
         Cartridge cart = new Cartridge(filepath);
         memory.loadCartridge(cart);
+        reset();
+    }
+
+    public void reset()
+    {
         cpu.reset();
         ppu.reset();
-        
         if (memory.getController() != null) 
         {
             memory.getController().clear();
@@ -39,16 +43,7 @@ public class NesEmulator
         }
     }
 
-    public CPU getCPU() 
-    { 
-        return cpu; 
-    }
-    public PPU getPPU() 
-    { 
-        return ppu; 
-    }
-    public Memory getMemory() 
-    { 
-        return memory; 
-    }
+    public CPU getCPU() { return cpu; }
+    public PPU getPPU() { return ppu; }
+    public Memory getMemory() { return memory; }
 }
