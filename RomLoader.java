@@ -14,8 +14,9 @@ public class RomLoader extends JFrame
     }
 
     private java.util.List<File> romFiles = new java.util.ArrayList<>();
+    private int selectedRomIndex = 0;
     private JPanel contentPanel;
-    private JList<String> listComponent;
+    private JPanel gridComponent;
 
     public RomLoader() 
     {
@@ -24,20 +25,37 @@ public class RomLoader extends JFrame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(960, 720);
         setLocationRelativeTo(null);
-        getContentPane().setBackground(Color.BLACK);
         
         contentPanel = new JPanel(new CardLayout());
-        contentPanel.setBackground(Color.BLACK);
-        
-        DefaultListModel<String> listModel = new DefaultListModel<>();
-        for (File f : romFiles) listModel.addElement(f.getName().toUpperCase().replace(".NES", ""));
-        listComponent = new JList<>(listModel);
-        listComponent.setBackground(Color.BLACK);
-        listComponent.setForeground(Color.WHITE);
-        listComponent.setFont(pricedownFont.deriveFont(22.0f));
-        
-        contentPanel.add(new JScrollPane(listComponent), "LIST");
+        buildGridView();
         add(contentPanel, BorderLayout.CENTER);
+    }
+
+    private void buildGridView() 
+    {
+        if (gridComponent == null) {
+            gridComponent = new JPanel(new BorderLayout());
+            contentPanel.add(gridComponent, "GRID");
+        }
+        gridComponent.removeAll();
+        JPanel gridGrid = new JPanel(new GridLayout(3, 3, 15, 15));
+        gridGrid.setBackground(Color.BLACK);
+        
+        int currentPage = selectedRomIndex / 9;
+        int pageStart = currentPage * 9;
+        for (int i = 0; i < 9; i++) {
+            int idx = pageStart + i;
+            if (idx < romFiles.size()) {
+                JPanel cell = new JPanel();
+                cell.setBackground(Color.DARK_GRAY);
+                gridGrid.add(cell);
+            } else {
+                JPanel empty = new JPanel();
+                empty.setOpaque(false);
+                gridGrid.add(empty);
+            }
+        }
+        gridComponent.add(gridGrid, BorderLayout.CENTER);
     }
 
     private void scanRomDirectory() 
