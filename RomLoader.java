@@ -56,6 +56,11 @@ public class RomLoader extends JFrame
             }
         }
         gridComponent.add(gridGrid, BorderLayout.CENTER);
+        
+        JButton prev = new JButton("<");
+        JButton next = new JButton(">");
+        gridComponent.add(prev, BorderLayout.WEST);
+        gridComponent.add(next, BorderLayout.EAST);
     }
 
     private void scanRomDirectory() 
