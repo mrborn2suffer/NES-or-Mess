@@ -19,7 +19,6 @@ public class WorkingEmulator extends JFrame
     {
         super("NES Emulator - " + romPath);
         emulator = new NesEmulator();
-        emulator.loadCartridge(romPath);
         screen = new BufferedImage(NES_W, NES_H, BufferedImage.TYPE_INT_RGB);
         
         canvas = new JPanel() 
@@ -29,26 +28,15 @@ public class WorkingEmulator extends JFrame
             {
                 super.paintComponent(g);
                 g.drawImage(screen, 0, 0, NES_W * SCALE, NES_H * SCALE, null);
-                if (!paused) 
+                if (paused) 
                 {
-                    g.setColor(new Color(0, 0, 0, 160));
-                    g.fillOval(10, 10, 32, 32);
+                    g.setColor(new Color(0, 0, 0, 185));
+                    g.fillRect(0, 0, getWidth(), getHeight());
                     g.setColor(Color.WHITE);
-                    g.drawOval(10, 10, 32, 32);
+                    g.drawString("PAUSED - RESUME", 100, 100);
                 }
             }
         };
-        canvas.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                int mx = e.getX();
-                int my = e.getY();
-                if (mx >= 10 && mx <= 42 && my >= 10 && my <= 42) {
-                    paused = !paused;
-                    canvas.repaint();
-                }
-            }
-        });
         
         setContentPane(canvas);
         pack();
