@@ -33,7 +33,7 @@ public class WorkingEmulator extends JFrame
                     g.setColor(new Color(0, 0, 0, 185));
                     g.fillRect(0, 0, getWidth(), getHeight());
                     g.setColor(Color.WHITE);
-                    g.drawString("PAUSED - RESUME", 100, 100);
+                    g.drawString("1. RESUME  2. RESTART  3. EXIT", 100, 100);
                 }
             }
         };
