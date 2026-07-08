@@ -13,7 +13,6 @@ public class WorkingEmulator extends JFrame
     private final NesEmulator emulator;
     private final BufferedImage screen;
     private final JPanel canvas;
-    private boolean paused = false;
 
     public WorkingEmulator(String romPath) 
     {
@@ -28,13 +27,6 @@ public class WorkingEmulator extends JFrame
             {
                 super.paintComponent(g);
                 g.drawImage(screen, 0, 0, NES_W * SCALE, NES_H * SCALE, null);
-                if (paused) 
-                {
-                    g.setColor(new Color(0, 0, 0, 185));
-                    g.fillRect(0, 0, getWidth(), getHeight());
-                    g.setColor(Color.WHITE);
-                    g.drawString("1. RESUME  2. RESTART  3. EXIT", 100, 100);
-                }
             }
         };
         
@@ -43,5 +35,10 @@ public class WorkingEmulator extends JFrame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+    
+    private void loadNewRom() {
+        dispose();
+        SwingUtilities.invokeLater(() -> new RomLoader().setVisible(true));
     }
 }
