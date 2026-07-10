@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
 public class WorkingEmulator extends JFrame 
@@ -13,6 +12,7 @@ public class WorkingEmulator extends JFrame
     private final NesEmulator emulator;
     private final BufferedImage screen;
     private final JPanel canvas;
+    private boolean crtEffectEnabled = true;
 
     public WorkingEmulator(String romPath) 
     {
@@ -27,6 +27,12 @@ public class WorkingEmulator extends JFrame
             {
                 super.paintComponent(g);
                 g.drawImage(screen, 0, 0, NES_W * SCALE, NES_H * SCALE, null);
+                if (crtEffectEnabled) 
+                {
+                    Graphics2D g2d = (Graphics2D) g;
+                    g2d.setColor(new Color(0, 0, 0, 50));
+                    for (int y = 0; y < getHeight(); y += 3) g2d.fillRect(0, y, getWidth(), 1);
+                }
             }
         };
         
@@ -35,10 +41,5 @@ public class WorkingEmulator extends JFrame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
-    }
-    
-    private void loadNewRom() {
-        dispose();
-        SwingUtilities.invokeLater(() -> new RomLoader().setVisible(true));
     }
 }
