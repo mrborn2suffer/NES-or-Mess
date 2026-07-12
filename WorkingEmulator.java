@@ -30,8 +30,10 @@ public class WorkingEmulator extends JFrame
                 if (crtEffectEnabled) 
                 {
                     Graphics2D g2d = (Graphics2D) g;
-                    g2d.setColor(new Color(0, 0, 0, 50));
-                    for (int y = 0; y < getHeight(); y += 3) g2d.fillRect(0, y, getWidth(), 1);
+                    g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.35f));
+                    g2d.drawImage(screen, -2, -2, getWidth() + 4, getHeight() + 4, null);
+                    g2d.setComposite(AlphaComposite.SrcOver);
                 }
             }
         };
