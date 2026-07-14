@@ -43,7 +43,16 @@ public class NesEmulator
         }
     }
 
-    public CPU getCPU() { return cpu; }
-    public PPU getPPU() { return ppu; }
-    public Memory getMemory() { return memory; }
+    public CPU getCPU() 
+    { 
+        return cpu; 
+    }
+    public PPU getPPU() 
+    { 
+        return ppu; 
+    }
+    public Memory getMemory() 
+    { 
+        return memory; 
+    }
 }
